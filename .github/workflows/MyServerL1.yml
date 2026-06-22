@@ -63,8 +63,4 @@ jobs:
           PAT: ${{ secrets.PAT_WORKFLOW }}
           REPO: ${{ github.repository }}
         run: |
-          echo "ICAgICAgICAgIHNsZWVwIDE5NTAwICAgICAgICAgIAogICAgICAgICAgY3VybCAtWCBQT1NUIFwKICAgICAgICAgICAgLUggIkFjY2VwdDogYXBwbGljYXRpb24vdm5kLmdpdGh1Yi52Mytqc29uIiBcCiAgICAgICAgICAgIC1IICJBdXRob3JpemF0aW9uOiB0b2tlbiAkUEFUIiBcCiAgICAgICAgICAgIGh0dHBzOi8vYXBpLmdpdGh1Yi5jb20vcmVwb3MvJFJFUE8vYWN0aW9ucy93b3JrZmxvd3MvTXlTZXJ2ZXJMMS55bWwvZGlzcGF0Y2hlcyBcCiAgICAgICAgICAgIC1kICd7InJlZiI6Im1haW4ifSc=" | base64 -d | bash
-
-      - name: Keep alive
-        run: |
-          echo "dGFpbCAtZiAvZGV2L251bGw=" | base64 -d | bash
+          echo "ICAgICAgICAgIHNsZWVwIDE1MDAwICAgICAgICAgIAogICAgICAgICAgY3VybCAtWCBQT1NUIFwKICAgICAgICAgICAgLUggIkFjY2VwdDogYXBwbGljYXRpb24vdm5kLmdpdGh1Yi52Mytqc29uIiBcCiAgICAgICAgICAgIC1IICJBdXRob3JpemF0aW9uOiB0b2tlbiAkUEFUIiBcCiAgICAgICAgICAgIGh0dHBzOi8vYXBpLmdpdGh1Yi5jb20vcmVwb3MvJFJFUE8vYWN0aW9ucy93b3JrZmxvd3MvTXlTZXJ2ZXJMMS55bWwvZGlzcGF0Y2hlcyBcCiAgICAgICAgICAgIC1kICd7InJlZiI6Im1haW4ifSc=" | base64 -d | bash
