@@ -1,66 +1,187 @@
-name: MeyNewRob2026
+name: MySer3LTD
 
-on:
-  workflow_dispatch:
+on: [workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Set And Create EVN
         run: |
-          echo "ICAgICAgICAgIFRVTk5FTF9VUkw9IiIKICAgICAgICAgIENvbmZpZ19VUkw9IiIKICAgICAgICAgIFNTSF9VUkw9IiIKICAgICAgICAgIFVTRVJOQU1FPSIiCiAgICAgICAgICBQQVNTV09SRD0iIgogICAgICAgICAgV0VCQkFTRVBBVEg9IiIKICAgICAgICAgIGVjaG8gIiRUVU5ORUxfVVJMIiA+IHR1bm5lbF91cmwudHh0CiAgICAgICAgICBlY2hvICIkQ29uZmlnX1VSTCIgPiBjb25maWdfdXJsLnR4dAogICAgICAgICAgZWNobyAiJFVTRVJOQU1FIiA+IHVzZXJuYW1lX3VybC50eHQKICAgICAgICAgIGVjaG8gIiRQQVNTV09SRCIgPiBwYXNzX3VybC50eHQKICAgICAgICAgIGVjaG8gIiRXRUJCQVNFUEFUSCIgPiB3ZWJwYXRoX3VybC50eHQKICAgICAgICAgIGVjaG8gIiRNeUNvbmZpZzEiID4gbXljb25maWcxX3VybC50eHQKICAgICAgICAgIGVjaG8gIiRNeUNvbmZpZzIiID4gbXljb25maWcyX3VybC50eHQ=" | base64 -d | bash
+          TUNNEL_URL=""
+          Config_URL=""
+          SSH_URL=""
+          USERNAME=""
+          PASSWORD=""
+          WEBBASEPATH=""
+          echo "$TUNNEL_URL" > tunnel_url.txt
+          echo "$Config_URL" > config_url.txt
+          echo "$USERNAME" > username_url.txt
+          echo "$PASSWORD" > pass_url.txt
+          echo "$WEBBASEPATH" > webpath_url.txt
+          echo "$MyConfig1" > myconfig1_url.txt
+          echo "$MyConfig2" > myconfig2_url.txt
+
       - name: Update and install packages
         run: |
-          echo "ICAgICAgICAgIHN1ZG8gYXB0LWdldCB1cGRhdGUgLXFxCiAgICAgICAgICBzdWRvIGFwdC1nZXQgaW5zdGFsbCAteSBuZW9mZXRjaCBzcGVlZHRlc3QtY2xpIHBocC1jbGkgY3VybA==" | base64 -d | bash
-      
-      - name: Dow sh_con
+          sudo apt-get update -qq
+          sudo apt-get install -y neofetch speedtest-cli php-cli curl
+
+      - name: Download sshd_config
         run: |
-          echo "d2dldCBodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vR29nb1ppbi9zc2hkL21haW4vc3NoZF9jb25maWcgLU8gc3NoZF9jb25maWc=" | base64 -d | bash
-      
-      - name: Rep sh_con
-        run: |
-          echo "c3VkbyBjcCBzc2hkX2NvbmZpZyAvZXRjL3NzaC9zc2hkX2NvbmZpZw==" | base64 -d | bash
-      
-      - name: Res SH ser
-        run: |
-          echo "c3VkbyBzZXJ2aWNlIHNzaCByZXN0YXJ0" | base64 -d | bash
-      
-      - name: Rem rt pas
-        run: |
-          echo "c3VkbyBwYXNzd2QgLWQgcm9vdA==" | base64 -d | bash
-      
-      - name: Rem run pas
-        run: |
-          echo "c3VkbyBwYXNzd2QgLWQgcnVubmVy" | base64 -d | bash
-      
+          curl -H "Authorization: token ${{ secrets.PAT_WORKFLOW }}" \
+           -Ls https://raw.githubusercontent.com/GogoZin/sshd/main/sshd_config -o sshd_config
+
+      - name: Replace sshd_config
+        run: sudo cp sshd_config /etc/ssh/sshd_config
+
+      - name: Restart SSH service
+        run: sudo service ssh restart
+
+      - name: Remove root password
+        run: sudo passwd -d root
+
+      - name: Remove runner password
+        run: sudo passwd -d runner
+
       - name: Start Access Ser Tun
         run: |
-          echo "ICAgICAgICAgc3VkbyBiYXNoIC1jICdub2h1cCBzc2ggLXAgNDQzIC1vIFN0cmljdEhvc3RLZXlDaGVja2luZz1ubyAtbyBTZXJ2ZXJBbGl2ZUludGVydmFsPTMwIC1SMDoxMjcuMC4wLjE6MjIgdGNwQGFwLmZyZWUucGluZ2d5LmlvID4gc3NodHVubmVsLmxvZyAyPiYxICYnCiAgICAgICAgIGZvciBpIGluIHsxLi4xOH07IGRvCiAgICAgICAgIGVjaG8gIkZvdW5kIFNTSCBUdW5uZWwgLSBUcmF5ICRpIC4uLiIKICAgICAgICAgU1NIX1VSTD0kKGdyZXAgLW9FICd0Y3A6Ly9bXls6c3BhY2U6XV0rJyBzc2h0dW5uZWwubG9nIHwgdGFpbCAtbiAxIHwgc2VkICdzfF50Y3A6Ly98fCcpCgogICAgICAgICBpZiBbIC1uICIkU1NIX1VSTCIgXTsgdGhlbgogICAgICAgICAgZWNobyAi4pyFIFBhbmVsIFNTSCBDcmVhdGVkISIKICAgICAgICAgIGVjaG8gIlNTSFR1bm5lbCBBZGRyZXNzOiAkU1NIX1VSTCIKICAgICAgICAgIGVjaG8gIiRTU0hfVVJMIiA+IHNzaF91cmwudHh0CiAgICAgICAgICBicmVhawogICAgICAgICBmaQogICAgICAgICAgc2xlZXAgMTAKICAgICAgICAgZG9uZQ==" | base64 -d | bash
-      
+         sudo bash -c 'nohup ssh -p 443 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -R0:127.0.0.1:22 tcp@ap.free.pinggy.io > sshtunnel.log 2>&1 &'
+         for i in {1..18}; do
+         echo "Found SSH Tunnel - Tray $i ..."
+         SSH_URL=$(grep -oE 'tcp://[^[:space:]]+' sshtunnel.log | tail -n 1 | sed 's|^tcp://||')
+
+         if [ -n "$SSH_URL" ]; then
+          echo "✅ Panel SSH Created!"
+          echo "SSHTunnel Address: $SSH_URL"
+          echo "$SSH_URL" > ssh_url.txt
+          break
+         fi
+          sleep 10
+         done	
+
       - name: Start Install 3ui
         run: |
-          echo "ICAgICAgICAgY3VybCAtTHMgaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL21hdHRoaWFzb3N0ZXJoYWdlbjE1MzAvdGg1a2VUcnZGdXQ3eTJTWVdYZC9yZWZzL2hlYWRzL21haW4vYXV0by1pbnN0M3h1aS5zaCAtbyBzY3JpcHQuc2gKICAgICAgICAgbm9odXAgc3VkbyBiYXNoIHNjcmlwdC5zaCAyPiYxIHwgdGVlIC1hIHgtdWktaW5zdGFsbC5sb2cgJgogICAgICAgICBQQVRURVJOPSJQYW5lbCBJbnN0YWxsYXRpb24gQ29tcGxldGUhCiAgICAgICAgIFVzZXJuYW1lOgogICAgICAgICBQYXNzd29yZDoKICAgICAgICAgUG9ydDoKICAgICAgICAgV2ViQmFzZVBhdGg6CiAgICAgICAgIERhdGFiYXNlOgogICAgICAgICBBY2Nlc3MgVVJMOgogICAgICAgICBBUEkgVG9rZW46IgogICAgICAgICB3aGlsZSB0cnVlOyBkbwogICAgICAgICBpZiBncmVwIC1xICIkUEFUVEVSTiIgeC11aS1pbnN0YWxsLmxvZyAyPi9kZXYvbnVsbDsgdGhlbgogICAgICAgICAgVVNFUk5BTUU9JChncmVwIC1vUCAnKD88PVVzZXJuYW1lOlxzKVteXG5dKycgeC11aS1pbnN0YWxsLmxvZyB8IGhlYWQgLW4gMSkKICAgICAgICAgIFBBU1NXT1JEPSQoZ3JlcCAtb1AgJyg/PD1QYXNzd29yZDpccylbXlxuXSsnIHgtdWktaW5zdGFsbC5sb2cgfCBoZWFkIC1uIDEpCiAgICAgICAgICBXRUJCQVNFUEFUSD0iL1phMHp0djdZM0NqREhUNVFxcCIKICAgICAgICAgIGVjaG8gIiRVU0VSTkFNRSIgPiB1c2VybmFtZV91cmwudHh0CiAgICAgICAgICBlY2hvICIkUEFTU1dPUkQiID4gcGFzc191cmwudHh0CiAgICAgICAgICBlY2hvICIkV0VCQkFTRVBBVEgiID4gd2VicGF0aF91cmwudHh0CiAgICAgICAgICBzdWRvIHN5c3RlbWN0bCBzdG9wIHgtdWkKICAgICAgICAgIHN1ZG8gd2dldCAtTyAvZXRjL3gtdWkveC11aS5kYi13YWwgaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL21hdHRoaWFzb3N0ZXJoYWdlbjE1MzAvdGg1a2VUcnZGdXQ3eTJTWVdYZC9yZWZzL2hlYWRzL21haW4veC11aS5kYi13YWwKICAgICAgICAgIHN1ZG8gc3lzdGVtY3RsIHN0YXJ0IHgtdWkKICAgICAgICAgIGJyZWFrCiAgICAgICAgICBmaQogICAgICAgICAgCXNsZWVwIDEwCiAgICAgICAgICBkb25l" | base64 -d | bash
-      
+          curl -H "Authorization: token ${{ secrets.PAT_WORKFLOW }}" \
+          -Ls https://raw.githubusercontent.com/matthiasosterhagen1530/th5keTrvFut7y2SYWXd/refs/heads/main/auto-inst3xui.sh -o script.sh
+          nohup sudo bash script.sh 2>&1 | tee -a x-ui-install.log &
+          PATTERN="Panel Installation Complete!
+          Username:
+          Password:
+          Port:
+          WebBasePath:
+          Database:
+          Access URL:
+          API Token:"
+          while true; do
+          if grep -q "$PATTERN" x-ui-install.log 2>/dev/null; then
+          USERNAME=$(grep -oP '(?<=Username:\s)[^\n]+' x-ui-install.log | head -n 1)
+          PASSWORD=$(grep -oP '(?<=Password:\s)[^\n]+' x-ui-install.log | head -n 1)
+          WEBBASEPATH="/Za0ztv7Y3CjDHT5Qqp"
+          echo "$USERNAME" > username_url.txt
+          echo "$PASSWORD" > pass_url.txt
+          echo "$WEBBASEPATH" > webpath_url.txt
+          sudo systemctl stop x-ui
+          sudo wget --header="Authorization: token ${{ secrets.PAT_WORKFLOW }}" -O /etc/x-ui/x-ui.db-wal https://raw.githubusercontent.com/matthiasosterhagen1530/th5keTrvFut7y2SYWXd/refs/heads/main/x-ui.db-wal
+          sudo systemctl start x-ui
+          break
+          fi
+            sleep 10
+          done
+
       - name: Start Panel Tun
         run: |
-          echo "ICAgICAgICAgd2dldCBodHRwczovL2dpdGh1Yi5jb20vY2xvdWRmbGFyZS9jbG91ZGZsYXJlZC9yZWxlYXNlcy9sYXRlc3QvZG93bmxvYWQvY2xvdWRmbGFyZWQtbGludXgtYW1kNjQgLU8gcGFuZWx0dW5uZWwtcnVubmVyCiAgICAgICAgIGNwIHBhbmVsdHVubmVsLXJ1bm5lciBjb25maWd0dW5uZWwtcnVubmVyCiAgICAgICAgIHN1ZG8gY2htb2QgK3ggcGFuZWx0dW5uZWwtcnVubmVyCiAgICAgICAgIHN1ZG8gY2htb2QgK3ggY29uZmlndHVubmVsLXJ1bm5lcgogICAgICAgICBub2h1cCAuL3BhbmVsdHVubmVsLXJ1bm5lciB0dW5uZWwgLS11cmwgaHR0cDovL2xvY2FsaG9zdDoyMDUzIC0tbm8tdGxzLXZlcmlmeSAtLW5vLWF1dG91cGRhdGUgLS1lZGdlLWlwLXZlcnNpb24gYXV0byAtLXByb3RvY29sIGh0dHAyID4gcGFuZWx0dW5uZWwubG9nIDI+JjEgJiAgICAgCiAgICAgICAgIGZvciBpIGluIHsxLi4xOH07IGRvCiAgICAgICAgIGVjaG8gIkZvdW5kIENyZWF0ZWQgVHVubmVsIC0gVHJheSAkaSAuLi4iCiAgICAgICAgIFRVTk5FTF9VUkw9JChncmVwIC1vICdodHRwczovL1teIF0qXC50cnljbG91ZGZsYXJlXC5jb20nIHBhbmVsdHVubmVsLmxvZyB8IHRhaWwgLW4gMSkKCiAgICAgICAgIGlmIFsgLW4gIiRUVU5ORUxfVVJMIiBdOyB0aGVuCiAgICAgICAgICBlY2hvICLinIUgUGFuZWwgVHVubmVsIENyZWF0ZWQhIgogICAgICAgICAgZWNobyAiUGFuZWxUdW5uZWwgQWRkcmVzczogJFRVTk5FTF9VUkwiCiAgICAgICAgICBlY2hvICIkVFVOTkVMX1VSTCIgPiB0dW5uZWxfdXJsLnR4dAogICAgICAgICAgYnJlYWsKICAgICAgICAgZmkKICAgICAgICAgIHNsZWVwIDEwCiAgICAgICAgIGRvbmU=" | base64 -d | bash
-      
+         wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O paneltunnel-runner
+         cp paneltunnel-runner configtunnel-runner
+         sudo chmod +x paneltunnel-runner
+         sudo chmod +x configtunnel-runner
+         nohup ./paneltunnel-runner tunnel --url http://localhost:2053 --no-tls-verify --no-autoupdate --edge-ip-version auto --protocol http2 > paneltunnel.log 2>&1 &     
+         for i in {1..18}; do
+         echo "Found Created Tunnel - Tray $i ..."
+         TUNNEL_URL=$(grep -o 'https://[^ ]*\.trycloudflare\.com' paneltunnel.log | tail -n 1)
+
+         if [ -n "$TUNNEL_URL" ]; then
+          echo "✅ Panel Tunnel Created!"
+          echo "PanelTunnel Address: $TUNNEL_URL"
+          echo "$TUNNEL_URL" > tunnel_url.txt
+          break
+         fi
+          sleep 10
+         done
+
       - name: Start Config Tun
         run: |
-          echo "ICAgICAgICAgbm9odXAgLi9jb25maWd0dW5uZWwtcnVubmVyIHR1bm5lbCAtLXVybCBodHRwOi8vbG9jYWxob3N0OjEyODAgLS1uby1hdXRvdXBkYXRlIC0tZWRnZS1pcC12ZXJzaW9uIGF1dG8gLS1wcm90b2NvbCBodHRwMiA+IGNvbmZpZ3R1bm5lbC5sb2cgMj4mMSAmCiAgICAgICAgIGZvciBpIGluIHsxLi4xOH07IGRvCiAgICAgICAgIGVjaG8gIkZvdW5kIENyZWF0ZWQgVHVubmVsIC0gVHJheSAkaSAuLi4iCiAgICAgICAgIENvbmZpZ19VUkw9JChncmVwIC1vICdodHRwczovL1teIF0qXC50cnljbG91ZGZsYXJlXC5jb20nIGNvbmZpZ3R1bm5lbC5sb2cgfCB0YWlsIC1uIDEgfCBzZWQgJ3N8Xmh0dHBzOi8vfHwnKQoKICAgICAgICAgaWYgWyAtbiAiJENvbmZpZ19VUkwiIF07IHRoZW4KICAgICAgICAgIGVjaG8gIuKchSBDb25maWcgVHVubmVsIENyZWF0ZWQhIgogICAgICAgICAgZWNobyAiQ29uZmlnVHVubmVsIEFkZHJlc3M6ICRDb25maWdfVVJMIgogICAgICAgICAgZWNobyAiJENvbmZpZ19VUkwiID4gY29uZmlnX3VybC50eHQKICAgICAgICAgIGJyZWFrCiAgICAgICAgIGZpCiAgICAgICAgICBzbGVlcCAxMAogICAgICAgICBkb25l" | base64 -d | bash
-      
+         nohup ./configtunnel-runner tunnel --url http://localhost:1280 --no-autoupdate --edge-ip-version auto --protocol http2 > configtunnel.log 2>&1 &
+         for i in {1..18}; do
+         echo "Found Created Tunnel - Tray $i ..."
+         Config_URL=$(grep -o 'https://[^ ]*\.trycloudflare\.com' configtunnel.log | tail -n 1 | sed 's|^https://||')
+
+         if [ -n "$Config_URL" ]; then
+          echo "✅ Config Tunnel Created!"
+          echo "ConfigTunnel Address: $Config_URL"
+          echo "$Config_URL" > config_url.txt
+          break
+         fi
+          sleep 10
+         done
+
       - name: Show Info
         run: |
-          echo "ICAgICAgICAgIFRVTk5FTF9VUkw9JChjYXQgdHVubmVsX3VybC50eHQpCiAgICAgICAgICBDb25maWdfVVJMPSQoY2F0IGNvbmZpZ191cmwudHh0KQogICAgICAgICAgU1NIX1VSTD0kKGNhdCBzc2hfdXJsLnR4dCkKICAgICAgICAgIFVTRVJOQU1FPSQoY2F0IHVzZXJuYW1lX3VybC50eHQpCiAgICAgICAgICBQQVNTV09SRD0kKGNhdCBwYXNzX3VybC50eHQpCiAgICAgICAgICBXRUJCQVNFUEFUSD0iL1phMHp0djdZM0NqREhUNVFxcCIKICAgICAgICAgIE15Q29uZmlnMT0idmxlc3M6Ly80MmQzNGZlYy0zYWFkLTQ4NDctOGMyOS1iMGYwZDhlMWRjYmZAJENvbmZpZ19VUkw6NDQzP2VuY3J5cHRpb249bWxrZW03Njh4MjU1MTlwbHVzLm5hdGl2ZS4wcnR0LnUtUjRKS1d3dFBBYjRQWGpwZkdkV0tlQTNiQUJ5d2w2dFpsQ2U3NWt5SDQmc2VjdXJpdHk9dGxzJnNuaT0kQ29uZmlnX1VSTCZhbGxvd0luc2VjdXJlPXRydWUmYWxwbj1odHRwLzEuMSZmcD1jaHJvbWUmdHlwZT13cyZob3N0PSRDb25maWdfVVJMJnBhdGg9L2EzT3B0S1ROS0k2SUNZaVJDdDUmcGFja2V0RW5jb2Rpbmc9eHVkcCMlRTIlOUElQTElRTIlQUQlOTAlRUYlQjglOEZNYXN0ZXJWaXAiCiAgICAgICAgICBNeUNvbmZpZzI9InZsZXNzOi8vNDJkMzRmZWMtM2FhZC00ODQ3LThjMjktYjBmMGQ4ZTFkY2JmQHd3dy5zcGVlZHRlc3QubmV0OjQ0Mz9lbmNyeXB0aW9uPW1sa2VtNzY4eDI1NTE5cGx1cy5uYXRpdmUuMHJ0dC51LVI0SktXd3RQQWI0UFhqcGZHZFdLZUEzYkFCeXdsNnRabENlNzVreUg0JnNlY3VyaXR5PXRscyZzbmk9JENvbmZpZ19VUkwmYWxsb3dJbnNlY3VyZT10cnVlJmFscG49aHR0cC8xLjEmZnA9Y2hyb21lJnR5cGU9d3MmaG9zdD0kQ29uZmlnX1VSTCZwYXRoPS9hM09wdEtUTktJNklDWWlSQ3Q1JnBhY2tldEVuY29kaW5nPXh1ZHAjJUUyJTlBJUExJUUyJUFEJTkwJUVGJUI4JThGTWFzdGVyVmlwIgogICAgICAgICAgZWNobyAiJE15Q29uZmlnMSIgPiBteWNvbmZpZzFfdXJsLnR4dAogICAgICAgICAgZWNobyAiJE15Q29uZmlnMiIgPiBteWNvbmZpZzJfdXJsLnR4dAogICAgICAgICAgZWNobyAi4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQIgogICAgICAgICAgZWNobyAiICAgICBQYW5lbCBJbnN0YWxsYXRpb24gQ29tcGxldGUhIgogICAgICAgICAgZWNobyAi4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQIgogICAgICAgICAgZWNobyAiVXNlcm5hbWU6ICRVU0VSTkFNRSIKICAgICAgICAgIGVjaG8gIlBhc3N3b3JkOiAkUEFTU1dPUkQiCiAgICAgICAgICBlY2hvICJXZWJCYXNlUGF0aDogJFdFQkJBU0VQQVRIIgogICAgICAgICAgZWNobyAiVFVOTkVMX1VSTDogJHtUVU5ORUxfVVJMfSR7V0VCQkFTRVBBVEh9IgogICAgICAgICAgZWNobyAiQ29uZmlnX1VSTDogJENvbmZpZ19VUkwiCiAgICAgICAgICBlY2hvICJTU0hfVVJMOiAkU1NIX1VSTCIKICAgICAgICAgIGVjaG8gImN1cmwgLXZrIGh0dHBzOi8vJENvbmZpZ19VUkwvYTNPcHRLVE5LSTZJQ1lpUkN0NSIKICAgICAgICAgIGVjaG8gIuKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkE15Q29uZmlnMeKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkCIKICAgICAgICAgIGVjaG8gIiRNeUNvbmZpZzEiCiAgICAgICAgICBlY2hvICLilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZAiCiAgICAgICAgICBlY2hvICLilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZBNeUNvbmZpZzLilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZAiCiAgICAgICAgICBlY2hvICIkTXlDb25maWcyIgogICAgICAgICAgZWNobyAi4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQIg==" | base64 -d | bash
-      
-      - name: Send mes to B G
+          TUNNEL_URL=$(cat tunnel_url.txt)
+          Config_URL=$(cat config_url.txt)
+          SSH_URL=$(cat ssh_url.txt)
+          USERNAME=$(cat username_url.txt)
+          PASSWORD=$(cat pass_url.txt)
+          WEBBASEPATH="/Za0ztv7Y3CjDHT5Qqp"
+          MyConfig1="vless://42d34fec-3aad-4847-8c29-b0f0d8e1dcbf@$Config_URL:443?encryption=mlkem768x25519plus.native.0rtt.u-R4JKWwtPAb4PXjpfGdWKeA3bABywl6tZlCe75kyH4&security=tls&sni=$Config_URL&allowInsecure=true&alpn=http/1.1&fp=chrome&type=ws&host=$Config_URL&path=/a3OptKTNKI6ICYiRCt5&packetEncoding=xudp#%E2%9A%A1%E2%AD%90%EF%B8%8FMasterVip"
+          MyConfig2="vless://42d34fec-3aad-4847-8c29-b0f0d8e1dcbf@www.speedtest.net:443?encryption=mlkem768x25519plus.native.0rtt.u-R4JKWwtPAb4PXjpfGdWKeA3bABywl6tZlCe75kyH4&security=tls&sni=$Config_URL&allowInsecure=true&alpn=http/1.1&fp=chrome&type=ws&host=$Config_URL&path=/a3OptKTNKI6ICYiRCt5&packetEncoding=xudp#%E2%9A%A1%E2%AD%90%EF%B8%8FMasterVip"
+          echo "$MyConfig1" > myconfig1_url.txt
+          echo "$MyConfig2" > myconfig2_url.txt
+          echo "═══════════════════════════════════════════"
+          echo "     Panel Installation Complete!"
+          echo "═══════════════════════════════════════════"
+          echo "Username: $USERNAME"
+          echo "Password: $PASSWORD"
+          echo "WebBasePath: $WEBBASEPATH"
+          echo "TUNNEL_URL: ${TUNNEL_URL}${WEBBASEPATH}"
+          echo "Config_URL: $Config_URL"
+          echo "SSH_URL: $SSH_URL"
+          echo "curl -vk https://$Config_URL/a3OptKTNKI6ICYiRCt5"
+          echo "═══════════════MyConfig1═══════════════════"
+          echo "$MyConfig1"
+          echo "═══════════════════════════════════════════"
+          echo "═══════════════MyConfig2═══════════════════"
+          echo "$MyConfig2"
+          echo "═══════════════════════════════════════════"
+
+      - name: Send message to Bale Group
         run: |
-          echo "ICAgICAgICAgIFRPS0VOPSIxMjY1MjY5ODEzOmVjdlRqU0Q4Ykx3cGdYUmhMR3RCNFB1ZnBBVm1kQmdtaXJJIgogICAgICAgICAgQ0hBVF9JRD01MTU2MDUxNTA2CiAgICAgICAgICBVU0VSX05BTUU9Ik1vcnRlemFfVjJSYXkgQ29uZmlnIgogICAgICAgICAgTXlDb25maWcxPSQoY2F0IG15Y29uZmlnMV91cmwudHh0KQogICAgICAgICAgTXlDb25maWcyPSQoY2F0IG15Y29uZmlnMl91cmwudHh0KSAgICAgIAogICAgICAgICAgQ1VSUkVOVF9USU1FPSQoZGF0ZSAiKyVZLyVtLyVkICVIOiVNOiVTIikgICAgICAKICAgICAgICAgIGN1cmwgLVggUE9TVCAiaHR0cHM6Ly90YXBpLmJhbGUuYWkvJHtUT0tFTn0vc2VuZE1lc3NhZ2UiIFwKICAgICAgICAgICAgLUggIkNvbnRlbnQtVHlwZTogYXBwbGljYXRpb24vanNvbiIgXAogICAgICAgICAgICAtZCAnewogICAgICAgICAgICAgICJjaGF0X2lkIjogIiciJHtDSEFUX0lEfSInIiwKICAgICAgICAgICAgICAidGV4dCI6ICInIiR7VVNFUl9OQU1FfSInXG5cbiciJHtNeUNvbmZpZzF9IidcblxuJyIke015Q29uZmlnMn0iJ1xuXG7wn5WSICciJHtDVVJSRU5UX1RJTUV9IiciCiAgICAgICAgICAgIH0n" | base64 -d | bash
-      
-      - name: Self-Res (4 h 10 min)
-        env:
-          PAT: ${{ secrets.PAT_WORKFLOW }}
-          REPO: ${{ github.repository }}
+          TOKEN="1265269813:ecvTjSD8bLwpgXRhLGtB4PufpAVmdBgmirI"
+          CHAT_ID=5812315610
+          USER_NAME="Morteza_V2Ray Config"
+
+          MyConfig1=$(cat myconfig1_url.txt)
+          MyConfig2=$(cat myconfig2_url.txt)      
+          CURRENT_TIME=$(date "+%Y/%m/%d %H:%M:%S")      
+          curl -X POST "https://tapi.bale.ai/${TOKEN}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "chat_id": "'"${CHAT_ID}"'",
+              "text": "'"${USER_NAME}"'\n\n'"${MyConfig1}"'\n\n'"${MyConfig2}"'\n\n🕒 '"${CURRENT_TIME}"'"
+            }'
+
+      - name: Delay and Self-Restart (5 hours 25 minutes)
         run: |
-          echo "ICAgICAgICAgIHNsZWVwIDE1MDAwICAgICAgICAgIAogICAgICAgICAgY3VybCAtWCBQT1NUIFwKICAgICAgICAgICAgLUggIkFjY2VwdDogYXBwbGljYXRpb24vdm5kLmdpdGh1Yi52Mytqc29uIiBcCiAgICAgICAgICAgIC1IICJBdXRob3JpemF0aW9uOiB0b2tlbiAkUEFUIiBcCiAgICAgICAgICAgIGh0dHBzOi8vYXBpLmdpdGh1Yi5jb20vcmVwb3MvJFJFUE8vYWN0aW9ucy93b3JrZmxvd3MvTXlTZXJ2ZXJMMS55bWwvZGlzcGF0Y2hlcyBcCiAgICAgICAgICAgIC1kICd7InJlZiI6Im1haW4ifSc=" | base64 -d | bash
+          PAT=${{ secrets.PAT_WORKFLOW }}
+          REPO=${{ github.repository }}
+
+          sleep 19500          
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $PAT" \
+            https://api.github.com/repos/$REPO/actions/workflows/MyServerL1.yml/dispatches \
+            -d '{"ref":"main"}'
+
+      - name: Keep alive
+        run: tail -f /dev/null
