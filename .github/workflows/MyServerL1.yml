@@ -42,18 +42,7 @@ jobs:
          cp paneltunnel-runner configtunnel-runner
          sudo chmod +x paneltunnel-runner
          sudo chmod +x configtunnel-runner
-         nohup ./paneltunnel-runner tunnel --no-autoupdate run --token eyJhIjoiOGJlODc3NGUwYjcxYTQyZjg5NDdiZDM5YzAwOTQzZWEiLCJ0IjoiM2FlNjEzNWEtY2I4OC00NzA5LWJmNDMtZmU1NGEzYmQwYTQ4IiwicyI6Ik9HVTFObU5sWmprdE5EYzVNQzAwWVdGbUxXSmpORFF0TVRCbE9UTXpZemsyTlRrMiJ9 > paneltunnel.log 2>&1 &     
-         for i in {1..18}; do
-         echo "Found Created Tunnel - Tray $i ..."
-         TUNNEL_URL=$(grep -o 'https://[^ ]*\.trycloudflare\.com' paneltunnel.log | tail -n 1)
-         if [ -n "$TUNNEL_URL" ]; then
-          echo "Panel Tunnel Created!"
-          echo "PanelTunnel Address: $TUNNEL_URL"
-          echo "$TUNNEL_URL" > tunnel_url.txt
-          break
-         fi
-          sleep 10
-         done
+         ./paneltunnel-runner tunnel --url http://localhost:2053 --no-autoupdate run --token eyJhIjoiOGJlODc3NGUwYjcxYTQyZjg5NDdiZDM5YzAwOTQzZWEiLCJ0IjoiM2FlNjEzNWEtY2I4OC00NzA5LWJmNDMtZmU1NGEzYmQwYTQ4IiwicyI6Ik9HVTFObU5sWmprdE5EYzVNQzAwWVdGbUxXSmpORFF0TVRCbE9UTXpZemsyTlRrMiJ9
          
       - name: Start Config Tun
         run: |
